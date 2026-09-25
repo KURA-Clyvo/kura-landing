@@ -1,0 +1,123 @@
+/* Base da landing. Consome tokens.css (marca) e só ACRESCENTA o que a marca
+   não resolve para uma página pública — principalmente contraste WCAG AA,
+   medido em 2026-09-24 (ver KURA_LANDING_PAGE_PLANO.md, LP-NFR-03). */
+
+:root {
+  /* --text-mute da marca (#8A7458) dá 3,99:1 sobre areia e reprova em texto
+     de corpo. Este tom dá 5,89:1 sobre --bg e 5,53:1 sobre --surface-2. */
+  --lp-mute: #6E5A40;
+  /* Texto do nível ALTA sobre --clay-pale (o --danger da marca dá 4,43:1). */
+  --lp-alta-ink: #8F3620;
+  /* Texto amber legível: amber puro sobre areia dá 2,85:1. */
+  --lp-amber-ink: #8A5A09;
+
+  --lp-wrap: 1160px;
+  --lp-gutter: clamp(16px, 4vw, 32px);
+  --lp-section: clamp(72px, 10vw, 136px);
+  --lp-focus: 0 0 0 3px var(--bg), 0 0 0 6px var(--ocean-soft);
+
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+  font-weight: 400;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, svg { display: block; max-width: 100%; }
+
+h1, h2, h3 { margin: 0; font-weight: 500; }
+h1, h2 {
+  font-family: var(--font-display);
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+h1 { font-size: clamp(2.6rem, 6vw, 4.6rem); line-height: 1.02; }
+h2 { font-size: clamp(2.1rem, 4.4vw, 3.2rem); line-height: 1.06; }
+h3 {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+p { margin: 0; text-wrap: pretty; }
+
+a { color: var(--ocean); text-underline-offset: 3px; }
+a:hover { color: var(--ocean-soft); }
+
+:focus-visible { outline: none; box-shadow: var(--lp-focus); border-radius: 6px; }
+
+.wrap {
+  width: 100%;
+  max-width: var(--lp-wrap);
+  margin-inline: auto;
+  padding-inline: var(--lp-gutter);
+}
+
+.section { padding-block: var(--lp-section); }
+
+.lede { font-size: clamp(1.05rem, 1.6vw, 1.2rem); color: var(--text-soft); max-width: 60ch; }
+.mute { color: var(--lp-mute); }
+.mono { font-family: var(--font-mono); font-size: 0.82rem; letter-spacing: 0.01em; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 12px 24px;
+  border-radius: var(--r-full);
+  border: 1.5px solid transparent;
+  font: 500 1rem/1.2 var(--font-body);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--d-fast) var(--ease), transform var(--d-fast) var(--ease),
+    border-color var(--d-fast) var(--ease);
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--ocean); color: var(--text-on-ocean); }
+.btn-primary:hover { background: var(--ocean-soft); color: var(--text-on-ocean); }
+.btn-outline { background: transparent; color: var(--ocean); border-color: var(--ocean); }
+.btn-outline:hover { background: var(--ocean-pale); color: var(--ocean); }
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip {
+  position: absolute;
+  left: 16px; top: -60px;
+  z-index: 100;
+  padding: 10px 16px;
+  background: var(--ocean);
+  color: var(--text-on-ocean);
+  border-radius: var(--r-md);
+}
+.skip:focus { top: 12px; color: var(--text-on-ocean); }

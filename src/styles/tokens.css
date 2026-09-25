@@ -1,0 +1,144 @@
+/* Tokens da marca KURA — cópia LITERAL, não editar valores aqui.
+   Origem: D:\FIAP\KURA\Kura\kura-tokens.css, linhas 1-138
+   (idêntico ao de design-system-docs-KURA@4264435, md5 3c8c3d83582fe62287063b7e487ce051).
+   Conferido em 2026-09-24. Reproduzir:  sed -n 1,138p ../Kura/kura-tokens.css | diff - <(sed '1,6d' src/styles/tokens.css)
+   Ajustes da landing (contraste etc.) vivem em global.css, nunca aqui. */
+
+/* ═════════════════════════════════════════════════════════════
+   KURA · DESIGN TOKENS
+   Lifted from kura-design-system.html — do not edit values.
+═════════════════════════════════════════════════════════════ */
+
+:root, [data-theme="light"] {
+  --sage:            #4A6944;
+  --sage-light:      #7B9E76;
+  --sage-pale:       #E0ECDB;
+  --amber:           #C8810D;
+  --amber-bright:    #E89C20;
+  --amber-pale:      #FBF0DB;
+  --clay:            #D9624A;
+  --clay-pale:       #F7E5DF;
+  --ocean:           #1A3A52;
+  --ocean-soft:      #2D5E7E;
+  --ocean-pale:      #D8E8F2;
+
+  --bg:              #F8F2E6;
+  --bg-elev:         #FFFCF7;
+  --bg-sunk:         #EDE3CD;
+  --surface:         #FFFCF7;
+  --surface-2:       #F2EBDB;
+
+  --border:          #EDE3CD;
+  --border-strong:   #D9CDB0;
+  --border-focus:    #4A6944;
+
+  --text:            #1B1006;
+  --text-soft:       #4A3418;
+  --text-mute:       #8A7458;
+  --text-on-sage:    #FFFCF7;
+  --text-on-amber:   #1B1006;
+  --text-on-ocean:   #FFFCF7;
+
+  --success:         #4A6944;
+  --success-bg:      #E0ECDB;
+  --warning:         #C8810D;
+  --warning-bg:      #FBF0DB;
+  --danger:          #B14A2F;
+  --danger-bg:       #F7E5DF;
+  --info:            #2D5E7E;
+  --info-bg:         #D8E8F2;
+
+  --shadow-sm:  0 1px 2px rgba(27,16,6,0.04), 0 1px 1px rgba(27,16,6,0.06);
+  --shadow-md:  0 4px 12px rgba(27,16,6,0.06), 0 2px 4px rgba(27,16,6,0.04);
+  --shadow-lg:  0 12px 32px rgba(27,16,6,0.08), 0 4px 8px rgba(27,16,6,0.04);
+  --shadow-sage: 0 8px 24px rgba(74,105,68,0.22);
+
+  --noise-opacity: 0.16;
+}
+
+[data-theme="dark"] {
+  --sage:            #8FB088;
+  --sage-light:      #A8C4A1;
+  --sage-pale:       #1F2A1B;
+  --amber:           #E89C20;
+  --amber-bright:    #FFB539;
+  --amber-pale:      #3A2810;
+
+  --clay:            #E07D62;
+  --clay-pale:       #3A1E16;
+
+  --ocean:           #6FA8C8;
+  --ocean-soft:      #4A8AAB;
+  --ocean-pale:      #1A2A38;
+
+  --bg:              #14110C;
+  --bg-elev:         #1F1A12;
+  --bg-sunk:         #0E0C08;
+  --surface:         #1F1A12;
+  --surface-2:       #2A2418;
+
+  --border:          #2A2418;
+  --border-strong:   #3D3424;
+  --border-focus:    #E89C20;
+
+  --text:            #F0E8D8;
+  --text-soft:       #C8BCA0;
+  --text-mute:       #8A7E62;
+  --text-on-sage:    #14110C;
+  --text-on-amber:   #14110C;
+  --text-on-ocean:   #14110C;
+
+  --success:         #8FB088;
+  --success-bg:      #1F2A1B;
+  --warning:         #E89C20;
+  --warning-bg:      #3A2810;
+  --danger:          #E07D62;
+  --danger-bg:       #3A1E16;
+  --info:            #6FA8C8;
+  --info-bg:         #1A2A38;
+
+  --shadow-sm:  0 1px 2px rgba(0,0,0,0.3), 0 1px 1px rgba(0,0,0,0.2);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
+  --shadow-lg:  0 12px 32px rgba(0,0,0,0.5), 0 4px 8px rgba(0,0,0,0.3);
+  --shadow-sage: 0 8px 24px rgba(143,176,136,0.28);
+
+  --noise-opacity: 0.06;
+}
+
+:root {
+  --font-display: 'Cormorant', Georgia, serif;
+  --font-body:    'Lexend', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  --t-xs:     11px;
+  --t-sm:     13px;
+  --t-base:   15px;
+  --t-md:     17px;
+  --t-lg:     20px;
+  --t-xl:     26px;
+  --t-2xl:    34px;
+  --t-3xl:    44px;
+
+  --s-1:  4px;
+  --s-2:  8px;
+  --s-3:  12px;
+  --s-4:  16px;
+  --s-5:  20px;
+  --s-6:  24px;
+  --s-8:  32px;
+  --s-10: 40px;
+  --s-12: 48px;
+  --s-16: 64px;
+
+  --r-sm:  6px;
+  --r-md:  10px;
+  --r-lg:  14px;
+  --r-xl:  20px;
+  --r-2xl: 28px;
+  --r-full: 9999px;
+
+  --ease:        cubic-bezier(.2,.8,.2,1);
+  --d-fast:   140ms;
+  --d-base:   220ms;
+  --d-slow:   400ms;
+}

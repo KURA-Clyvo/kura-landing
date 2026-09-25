@@ -1,0 +1,59 @@
+---
+import LunaSimulator from './LunaSimulator.tsx';
+import dados from '../data/luna-cenarios.json';
+import { PRECOS, linkWhatsApp } from '../config';
+import '../styles/simulator.css';
+
+const whats = linkWhatsApp('Olá! Vi o site do KURA e quero saber mais sobre o piloto para a minha clínica.');
+---
+<section class="hero" aria-labelledby="hero-titulo">
+  <div class="wrap grid">
+    <div class="copy">
+      <p class="para">Para clínicas veterinárias de 1 a 5 veterinários</p>
+      <h1 id="hero-titulo">Seu tutor já está no WhatsApp. Agora a sua clínica também está.</h1>
+      <p class="lede">
+        A Luna responde o tutor a qualquer hora, classifica a urgência e deixa a
+        conversa pronta na fila da clínica. Quem decide é sempre o veterinário.
+      </p>
+      <div class="acoes">
+        <a class="btn btn-primary" href="#piloto">Quero ser uma das {PRECOS.vagasPiloto} clínicas piloto</a>
+        <a class="btn btn-outline" href={whats} rel="noopener" target="_blank">Falar no WhatsApp</a>
+      </div>
+      <p class="contraste">
+        Os outros sistemas põem a IA no WhatsApp do veterinário.
+        O KURA põe no WhatsApp do tutor.
+      </p>
+    </div>
+    <div class="demo">
+      <LunaSimulator
+        client:idle
+        cenarios={dados.cenarios as any}
+        regrasVersao={dados.origem.regras_versao}
+        commit={dados.origem.commit}
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { padding-block: clamp(40px, 7vw, 96px) clamp(56px, 8vw, 112px); }
+  .grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: center; }
+  .para { font-size: 0.95rem; color: var(--lp-mute); margin-bottom: 18px; }
+  h1 { max-width: 13ch; }
+  .lede { margin-top: 22px; }
+  .acoes { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+  .contraste {
+    margin-top: 36px;
+    padding-left: 16px;
+    border-left: 2px solid var(--sage);
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    line-height: 1.3;
+    color: var(--text-soft);
+    max-width: 32ch;
+  }
+  @media (max-width: 960px) {
+    .grid { grid-template-columns: 1fr; }
+    h1 { max-width: 16ch; }
+  }
+</style>

@@ -1,0 +1,81 @@
+/* Simulador da Luna (ilha Preact — por isso o CSS é global, não escopado). */
+.sim { display: grid; gap: 14px; }
+
+.sim-pick { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.sim-pick-label { font-size: 0.9rem; color: var(--lp-mute); margin-right: 4px; }
+.chip {
+  min-height: 40px;
+  padding: 8px 14px;
+  border-radius: var(--r-full);
+  border: 1.5px solid var(--border-strong);
+  background: var(--bg-elev);
+  color: var(--text-soft);
+  font: 500 0.9rem/1 var(--font-body);
+  cursor: pointer;
+  transition: border-color var(--d-fast) var(--ease), background var(--d-fast) var(--ease);
+}
+.chip:hover { border-color: var(--ocean); }
+.chip[aria-pressed='true'] { background: var(--ocean); border-color: var(--ocean); color: var(--text-on-ocean); }
+
+.phone {
+  background: #E9E2D2;
+  border-radius: 24px;
+  border: 1px solid var(--border-strong);
+  overflow: hidden;
+}
+.phone-top {
+  display: flex; align-items: baseline; gap: 10px;
+  padding: 12px 18px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border-strong);
+  font-weight: 500; font-size: 0.95rem;
+}
+.phone-top .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--sage); align-self: center; }
+.mute-sm { font-size: 0.8rem; font-weight: 400; color: var(--lp-mute); }
+
+/* Altura mínima fixa: a encenação só troca opacidade, nunca empurra layout (CLS). */
+.thread { display: grid; gap: 10px; padding: 18px; min-height: 300px; align-content: start; }
+.bubble {
+  position: relative;
+  max-width: 86%;
+  padding: 10px 14px 22px;
+  border-radius: 14px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity var(--d-slow) var(--ease), transform var(--d-slow) var(--ease);
+}
+.bubble.on { opacity: 1; transform: none; }
+.bubble time { position: absolute; right: 12px; bottom: 5px; font-size: 0.7rem; color: var(--lp-mute); }
+.tutor { justify-self: end; background: #D5E8CF; border-bottom-right-radius: 4px; }
+.luna { justify-self: start; background: var(--surface); border-bottom-left-radius: 4px; }
+.bubble mark { background: var(--amber-pale); color: var(--text); padding: 0 2px; border-radius: 3px; box-shadow: inset 0 -2px 0 var(--amber); }
+
+.typing { display: none; gap: 4px; padding: 12px 14px; background: var(--surface); border-radius: 14px; justify-self: start; margin: 0; }
+.typing.on { display: inline-flex; }
+.typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--lp-mute); animation: pulse 1s infinite var(--ease); }
+.typing span:nth-child(2) { animation-delay: 0.15s; }
+.typing span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes pulse { 50% { opacity: 0.3; } }
+
+.fila {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--ocean);
+  border-radius: var(--r-lg);
+  padding: 14px 18px;
+  opacity: 0.001;
+  transition: opacity var(--d-slow) var(--ease);
+}
+.fila.on { opacity: 1; }
+.fila-head { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 500; color: var(--ocean); margin-bottom: 10px; }
+.fila-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.status { margin-left: auto; font-size: 0.85rem; color: var(--lp-mute); }
+.nivel { padding: 3px 10px; border-radius: var(--r-full); font-size: 0.8rem; font-weight: 600; }
+.n-alta { background: var(--clay-pale); color: var(--lp-alta-ink); }
+.n-media { background: var(--amber-pale); color: var(--lp-amber-ink); }
+.n-baixa { background: var(--ocean-pale); color: var(--ocean); }
+.motivo { margin-top: 10px; font-size: 0.9rem; color: var(--text-soft); }
+
+.sim-note { font-size: 0.8rem; color: var(--lp-mute); }
