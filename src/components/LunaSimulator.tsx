@@ -90,7 +90,6 @@ export default function LunaSimulator({ cenarios, regrasVersao, commit }: Props)
       <div class={`fila ${fase >= 3 ? 'on' : ''}`}>
         <div class="fila-head">
           <span>Fila da clínica</span>
-          <span class="mute-sm">amanhã, 08:00</span>
         </div>
         <div class="fila-row">
           <span class={`nivel n-${c.urgencia.toLowerCase()}`}>{NIVEL[c.urgencia]}</span>

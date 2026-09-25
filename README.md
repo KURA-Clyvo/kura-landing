@@ -31,6 +31,10 @@ npx astro check      # type-check
    pegou 0 e ainda acusou 16 de 16 frases honestas. **A proteção real é a matriz §0.3 do plano:**
    toda frase nova com número ou promessa passa por ela, com o critério *"a clínica consegue isso
    pela interface hoje?"*, não *"existe no código?"*.
+   Ele lê o HTML renderizado, as `<meta>`, os `props` das ilhas Preact e as strings de prosa dos
+   bundles JS (o simulador só existe ali). Uma negação isenta só a oração em que está. Alarme falso
+   em frase honesta com âncora (ex.: "3 clínicas de teste", "12%") é **aceito de propósito**: força a
+   conferência da fonte. Se a frase se sustentar, reescreva sem a âncora ou traga a fonte para a matriz.
 2. **O simulador da Luna não é escrito à mão.** `src/data/luna-cenarios.json` sai do motor real:
 
    ```bash
@@ -58,7 +62,7 @@ npx wrangler deploy    # publica em kura-landing.<conta>.workers.dev
 |---|---|
 | `astro check` | 0 erros |
 | `npm test` | 2/2 (mutação na fórmula ⇒ 1 falha, ou seja, o teste morde) |
-| Detector de âncoras | self-test 31/31 termos e 23/23 frases honestas sem alarme; `dist/` com 0 achados; uma frase de tração injetada no `dist/` é pega (`EXIT=1`). Não cobre paráfrase |
+| Detector de âncoras | self-test 33/33 termos e 23/23 frases honestas sem alarme; `dist/` com 0 achados; injeção de "98% NPS" no bundle JS e nos `props` da ilha é pega (`EXIT=1`). Não cobre paráfrase |
 | axe-core (WCAG 2.2 AA + boas práticas) | 0 violações, excluindo o logotipo (isento pelo 1.4.3) |
 | Lighthouse 13.5, mobile | Performance 98 · Acessibilidade 96 · Boas práticas 100 · SEO 100 · LCP 2,0 s · CLS 0,014 · 148 KiB |
 | Formulário | validação, foco no 1º erro, URL `wa.me` correta, botão desabilitado antes da hidratação |

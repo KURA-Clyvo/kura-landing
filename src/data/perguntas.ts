@@ -2,7 +2,7 @@
 // Usadas na seção de perguntas e no JSON-LD FAQPage.
 export const perguntas = [
   { q: 'Já tenho um sistema. Preciso trocar?', a: 'Não. O KURA roda ao lado do seu sistema atual e liga o que ele não faz: a conversa com o tutor no WhatsApp, com triagem.' },
-  { q: 'E se a Luna errar?', a: 'Ela não diagnostica. Ela prioriza a fila e registra o que levou à classificação. E toda resposta que não é de alta urgência leva ao tutor o critério para procurar atendimento imediato, justamente para o caso de a Luna não reconhecer a gravidade.' },
+  { q: 'E se a Luna errar?', a: 'Ela não diagnostica. Ela prioriza a fila e, para tutor cadastrado, registra o que levou à classificação. E toda resposta que não é de alta urgência leva ao tutor o critério para procurar atendimento imediato, justamente para o caso de a Luna não reconhecer a gravidade.' },
   { q: 'Vocês emitem nota fiscal?', a: 'Não. Se a sua clínica precisa emitir nota pelo mesmo sistema, ela continua fazendo isso no sistema atual.' },
   { q: 'Quantas clínicas usam o KURA hoje?', a: 'Nenhuma pagante ainda. Você seria uma das cinco primeiras do piloto.' },
   { q: 'O tutor precisa instalar alguma coisa?', a: 'Não para falar com a Luna: é o WhatsApp que ele já usa. O app do tutor é opcional.' },

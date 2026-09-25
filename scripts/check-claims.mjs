@@ -32,18 +32,41 @@ export const PROIBIDOS = [
 
 const NEGACAO = /\b(n[aã]o|nunca|nenhum|nenhuma|ainda n[aã]o)\b/i;
 
-export function varrer(texto) {
-  // Só o texto que o visitante lê (fora <script>/<style>), mais o conteúdo das
-  // <meta> (description/og), que também é afirmação pública.
-  const metas = [...texto.matchAll(/<meta[^>]+content="([^"]*)"/gi)].map((m) => m[1]).join('\n');
-  const plano = texto.replace(/<(script|style)[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, '\n') + '\n' + metas;
+function desescapar(s) {
+  return s.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+}
+
+// Texto que o visitante lê num HTML: fora <script>/<style>, mais as <meta>
+// (description/og) e os `props` das ilhas Preact, que carregam o texto que só
+// aparece depois da hidratação (o simulador inteiro vive ali — re-G2 #2, C1).
+function textoDoHtml(html) {
+  const metas = [...html.matchAll(/<meta[^>]+content="([^"]*)"/gi)].map((m) => m[1]);
+  const props = [...html.matchAll(/<astro-island[^>]*\sprops="([^"]*)"/gi)].map((m) => desescapar(m[1]));
+  const corpo = html.replace(/<(script|style)[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, '\n');
+  return [corpo, ...metas, ...props].join('\n');
+}
+
+// Texto num bundle JS: só literais de string com cara de prosa (espaço e letra,
+// 16+ caracteres). Código não é afirmação; a copy das ilhas é.
+function textoDoJs(js) {
+  return [...js.matchAll(/"([^"\\\n]{16,})"|'([^'\\\n]{16,})'|`([^`\\]{16,})`/g)]
+    .map((m) => m[1] ?? m[2] ?? m[3])
+    .filter((s) => / /.test(s) && /[A-Za-zÀ-ú]{3}/.test(s))
+    .join('\n');
+}
+
+export function varrer(texto, tipo = 'html') {
+  const plano = tipo === 'js' ? textoDoJs(texto) : textoDoHtml(texto);
   const frases = plano.split(/(?<=[.!?])\s+|\n+/).map((f) => f.trim()).filter(Boolean);
   const achados = [];
   for (const f of frases) {
-    if (NEGACAO.test(f)) continue;
-    for (const p of PROIBIDOS) {
-      const m = f.match(p.re);
-      if (m) achados.push({ padrao: String(p.re), por: p.por, trecho: f.slice(0, 120) });
+    // A negação só isenta a ORAÇÃO em que está, não a frase inteira: "Hospedado na
+    // AWS, nunca cai" tem que ser pego (re-G2 #2, C3).
+    for (const oracao of f.split(/[,;:?—–]/)) {
+      if (NEGACAO.test(oracao)) continue;
+      for (const p of PROIBIDOS) {
+        if (p.re.test(oracao)) achados.push({ padrao: String(p.re), por: p.por, trecho: f.slice(0, 120) });
+      }
     }
   }
   return achados;
@@ -52,7 +75,7 @@ export function varrer(texto) {
 function arquivos(dir) {
   return readdirSync(dir).flatMap((n) => {
     const p = join(dir, n);
-    return statSync(p).isDirectory() ? arquivos(p) : /\.html$/.test(n) ? [p] : [];
+    return statSync(p).isDirectory() ? arquivos(p) : /\.(html|js)$/.test(n) ? [p] : [];
   });
 }
 
@@ -71,6 +94,8 @@ if (process.argv.includes('--selftest')) {
     'Já são 40 clínicas na lista de espera', '15.000 tutores cadastrados', 'Disponível na App Store',
     'App para iOS e Android', 'Pagamento por Pix integrado', 'Teste grátis por 14 dias', 'Primeiro mês sem custo',
     'Cancele quando quiser, sem multa', 'Lembrete de vacina automático',
+    // re-G2 #2 (C3): negação em OUTRA oração não pode isentar
+    'Hospedado na AWS, nunca cai', 'Nunca tivemos incidente: certificado ISO 27001',
   ];
   // Controle negativo: as 16 frases honestas da re-G2 (que a 2ª versão punia) + frases da página.
   const honestas = [
@@ -88,6 +113,11 @@ if (process.argv.includes('--selftest')) {
     'Nos casos que a Resolução CFMV 1.465/2022 permite.', 'o KURA vai estar como expositor.',
   ];
   const falhas = iscas.filter((i) => varrer(i).length === 0);
+  // re-G2 #2 (C1): texto que só existe depois da hidratação também é lido.
+  const ilha = '<astro-island props="{&quot;nota&quot;:[0,&quot;Pesquisa com 98% NPS&quot;]}"></astro-island>';
+  if (!varrer(ilha).length) falhas.push('cego para props de <astro-island>');
+  if (!varrer('const n = "Luna com 98% de acerto nas triagens";', 'js').length) falhas.push('cego para string de bundle JS');
+  if (varrer('const w = "100%"; x.style.width = `${p}%`;', 'js').length) falhas.push('falso positivo em código JS sem prosa');
   for (const h of honestas) if (varrer(h).length) falhas.push(`falso positivo: "${h}"`);
   if (falhas.length) { console.error('SELFTEST FALHOU, detector cego para:', falhas); process.exit(1); }
   console.log(`selftest ok: ${iscas.length}/${iscas.length} iscas pegas, ${honestas.length}/${honestas.length} frases honestas sem alarme`);
@@ -95,7 +125,8 @@ if (process.argv.includes('--selftest')) {
 }
 
 const alvo = process.argv[2] || 'dist';
-const achados = arquivos(alvo).flatMap((f) => varrer(readFileSync(f, 'utf8')).map((a) => ({ arquivo: f, ...a })));
+const achados = arquivos(alvo).flatMap((f) =>
+  varrer(readFileSync(f, 'utf8'), f.endsWith('.js') ? 'js' : 'html').map((a) => ({ arquivo: f, ...a })));
 const total = arquivos(alvo).length;
 if (!total) { console.error(`nenhum arquivo em ${alvo}: o build rodou?`); process.exit(2); }
 if (achados.length) {
