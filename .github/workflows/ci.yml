@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Type-check
+        run: npx astro check
+      - name: Unit tests
+        run: npm test
+      # Controle positivo ANTES da varredura: se o detector estiver cego, um
+      # "0 afirmações proibidas" no passo seguinte não prova nada.
+      - name: Claims detector self-test
+        run: npm run check:claims:selftest
+      - name: Build (includes claims scan of dist/)
+        run: npm run build
+      - name: Lighthouse budget (mobile)
+        run: |
+          npx astro preview --port 4321 --host 127.0.0.1 &
+          npx wait-on -t 60000 http://127.0.0.1:4321/
+          npx -y lighthouse@13 http://127.0.0.1:4321/ --quiet --chrome-flags="--headless=new --no-sandbox" \
+            --only-categories=performance,accessibility,best-practices,seo \
+            --output=json --output-path=lh.json
+          node scripts/lighthouse-budget.mjs lh.json

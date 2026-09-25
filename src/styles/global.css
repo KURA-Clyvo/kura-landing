@@ -50,6 +50,7 @@ img, svg { display: block; max-width: 100%; }
 h1, h2, h3 { margin: 0; font-weight: 500; }
 h1, h2 {
   font-family: var(--font-display);
+  font-variant-numeric: lining-nums;
   letter-spacing: -0.022em;
   text-wrap: balance;
 }
@@ -121,3 +122,6 @@ a:hover { color: var(--ocean-soft); }
   border-radius: var(--r-md);
 }
 .skip:focus { top: 12px; color: var(--text-on-ocean); }
+
+/* Cormorant usa algarismos de texto por padrão; em preço e hora, alinhados leem melhor. */
+[class*='preco'], .valor, .hora, .fatos strong, .calc-res dd { font-variant-numeric: lining-nums; }

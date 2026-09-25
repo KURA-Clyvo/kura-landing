@@ -25,3 +25,4 @@
 .f-aviso { font-size: 0.88rem; color: var(--lp-mute); }
 .f-status:empty { display: none; }
 .f-status p { padding: 12px 14px; border-radius: var(--r-md); background: var(--sage-pale); color: var(--text); }
+.f button:disabled { opacity: 0.55; cursor: wait; }

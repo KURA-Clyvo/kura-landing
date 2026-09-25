@@ -1,4 +1,4 @@
-import { useRef, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 
 // Ruling L-6 (2026-09-24): o pedido de piloto vai para o WhatsApp do Felipe.
 // Este formulário NÃO envia nada a servidor nenhum — ele só monta a mensagem e
@@ -30,6 +30,10 @@ export default function FormPiloto({ numero, responsavel }: Props) {
   const [erros, setErros] = useState<Partial<Record<Campo, string>>>({});
   const [link, setLink] = useState<string | null>(null);
   const form = useRef<HTMLFormElement>(null);
+  // Antes da hidratação o formulário seria enviado como GET nativo e a página
+  // recarregaria perdendo o que foi digitado. O botão só liga depois do JS.
+  const [pronto, setPronto] = useState(false);
+  useEffect(() => setPronto(true), []);
 
   function enviar(e: Event) {
     e.preventDefault();
@@ -38,8 +42,13 @@ export default function FormPiloto({ numero, responsavel }: Props) {
       ['nome', 'clinica', 'cidade', 'vets', 'sistema'].map((k) => [k, String(fd.get(k) ?? '').trim()]),
     );
     const novos: Partial<Record<Campo, string>> = {};
-    (['nome', 'clinica', 'cidade'] as Campo[]).forEach((k) => {
-      if (!d[k]) novos[k] = `Preencha ${ROTULO[k].toLowerCase()}.`;
+    const faltando: Record<'nome' | 'clinica' | 'cidade', string> = {
+      nome: 'Preencha o seu nome.',
+      clinica: 'Preencha o nome da clínica.',
+      cidade: 'Preencha a cidade.',
+    };
+    (['nome', 'clinica', 'cidade'] as const).forEach((k) => {
+      if (!d[k]) novos[k] = faltando[k];
     });
     if (!d.vets) novos.vets = 'Escolha quantos veterinários atendem na clínica.';
     setErros(novos);
@@ -69,7 +78,7 @@ export default function FormPiloto({ numero, responsavel }: Props) {
   );
 
   return (
-    <form ref={form} class="f" onSubmit={enviar} noValidate>
+    <form ref={form} class="f" onSubmit={enviar} noValidate action="#piloto">
       {campo('nome', 'name')}
       {campo('clinica', 'organization')}
       {campo('cidade', 'address-level2')}
@@ -89,7 +98,7 @@ export default function FormPiloto({ numero, responsavel }: Props) {
         <label for="f-sistema">Sistema que usa hoje <span class="f-opc">(opcional)</span></label>
         <input id="f-sistema" name="sistema" type="text" />
       </div>
-      <button class="btn btn-primary" type="submit">Abrir o WhatsApp com a mensagem pronta</button>
+      <button class="btn btn-primary" type="submit" disabled={!pronto}>Abrir o WhatsApp com a mensagem pronta</button>
       <p class="f-aviso">
         Este site não guarda o que você escreve. O botão abre o seu WhatsApp com a
         mensagem montada para {responsavel}, e você decide se envia.
