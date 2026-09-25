@@ -23,12 +23,14 @@ npx astro check      # type-check
 ## Regras que não podem ser quebradas
 
 1. **Nenhum número ou promessa sem fonte.** Toda afirmação vem da matriz do §0.3 do plano.
-   `scripts/check-claims.mjs` roda no build com um padrão por **classe** de afirmação proibida
-   (tração, receita, avaliação, acurácia, certificação, LGPD, iOS, isolamento entre clínicas,
-   diagnóstico, oferta, fiscal, infra, migração, lembrete de vacina, selo de terceiro). É uma
-   **lista de padrões, não um leitor de sentido**: uma redação nova pode escapar. Por isso toda
-   frase nova com número ou promessa também passa pela matriz §0.3 do plano. Depois de editar a
-   lista, rode `npm run check:claims:selftest` (48 iscas + 10 frases honestas que não podem disparar).
+   `scripts/check-claims.mjs` roda no build e procura só **termos-âncora** que nunca têm uso honesto
+   nesta página (ISO 27001, SOC 2, ICP-Brasil, ANVISA, AWS, NPS, ★, MRR, `clyvo`, percentual,
+   contagem de clínicas/tutores, iOS/lojas, "grátis", Pix, lembrete de vacina, aprovação de
+   CFMV/FIAP/NEXT), ignorando frases negativas. ⚠️ **Ele NÃO pega paráfrase**, e isso foi medido: a
+   re-G2 escreveu 30 paráfrases proibidas e uma versão anterior, que tentava cobri-las por regex,
+   pegou 0 e ainda acusou 16 de 16 frases honestas. **A proteção real é a matriz §0.3 do plano:**
+   toda frase nova com número ou promessa passa por ela, com o critério *"a clínica consegue isso
+   pela interface hoje?"*, não *"existe no código?"*.
 2. **O simulador da Luna não é escrito à mão.** `src/data/luna-cenarios.json` sai do motor real:
 
    ```bash
@@ -56,7 +58,7 @@ npx wrangler deploy    # publica em kura-landing.<conta>.workers.dev
 |---|---|
 | `astro check` | 0 erros |
 | `npm test` | 2/2 (mutação na fórmula ⇒ 1 falha, ou seja, o teste morde) |
-| Detector de afirmações | self-test 48/48 iscas (inclui as 38 variantes da G2) e 10/10 frases honestas sem alarme; `dist/` com 0 achados; o protótipo antigo dispara 10 categorias |
+| Detector de âncoras | self-test 31/31 termos e 23/23 frases honestas sem alarme; `dist/` com 0 achados; uma frase de tração injetada no `dist/` é pega (`EXIT=1`). Não cobre paráfrase |
 | axe-core (WCAG 2.2 AA + boas práticas) | 0 violações, excluindo o logotipo (isento pelo 1.4.3) |
 | Lighthouse 13.5, mobile | Performance 98 · Acessibilidade 96 · Boas práticas 100 · SEO 100 · LCP 2,0 s · CLS 0,014 · 148 KiB |
 | Formulário | validação, foco no 1º erro, URL `wa.me` correta, botão desabilitado antes da hidratação |

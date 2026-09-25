@@ -2,8 +2,8 @@
 // Sequência real do fluxo de aprovação — por isso numerada.
 const passos = [
   { t: 'A Luna sugere', d: 'Classifica a urgência da mensagem ou monta o rascunho do prontuário a partir da sua voz.' },
-  { t: 'Você confere', d: 'Vê o que ela sugeriu e por quê. Corrige o que precisar.' },
-  { t: 'Você confirma', d: 'O rascunho fica marcado como não confirmado até alguém da equipe revisar.' },
+  { t: 'Você confere', d: 'Vê o que ela sugeriu e o que levou à sugestão.' },
+  { t: 'Você confirma', d: 'O rascunho só é marcado como confirmado quando alguém da equipe confirma.' },
 ];
 ---
 <section class="section" aria-labelledby="dec-titulo">
@@ -12,7 +12,7 @@ const passos = [
       <h2 id="dec-titulo">A IA sugere. O veterinário decide.</h2>
       <p class="lede">
         A Luna não diagnostica. Ela organiza e prioriza para você chegar mais
-        rápido ao caso que precisa de você.
+        rápido ao caso que precisa de você. O diagnóstico é seu.
       </p>
     </div>
     <ol class="passos">

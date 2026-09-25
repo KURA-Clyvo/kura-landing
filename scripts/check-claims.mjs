@@ -8,70 +8,84 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
-// Um padrão por CLASSE de afirmação da matriz §0.3 do plano, não por frase.
-// A 1ª versão listava as frases do protótipo antigo e deixava passar 34 de 38
-// variantes plausíveis (G2 da landing, 2026-09-25). As variantes viraram iscas
-// permanentes no --selftest abaixo.
+// Detector de TERMOS-ÂNCORA inequívocos, não de sentido. Histórico, para não
+// repetir: a 1ª versão listava frases do protótipo (pegou 4/38 paráfrases, G2);
+// a 2ª tentou cobrir cada classe com regex e decorou as iscas (0/30 paráfrases
+// novas e alarme falso em 16/16 frases honestas, re-G2 de 2026-09-25). Regex não
+// vence paráfrase. A proteção real é a matriz §0.3 do plano; isto aqui só pega o
+// termo que nunca tem uso honesto nesta página, e ignora frase negativa
+// ("não", "nunca", "nenhum", "ainda não").
 export const PROIBIDOS = [
-  { re: /ISO(\s*\/\s*IEC)?\s*27\.?001|certifica(do|ção|cao)\s+(ISO|digital|A1|A3|ICP)|certificado A[13]\b|ICP-?Brasil|assinatura digital (com certificado|v[aá]lida)/i, por: 'certificação/assinatura qualificada inexistente' },
+  { re: /ISO(\s*\/\s*IEC)?\s*27\.?001|\bSOC\s*2\b/i, por: 'certificação de segurança inexistente' },
+  { re: /ICP-?Brasil|certificado A[13]\b/i, por: 'assinatura qualificada não existe no produto' },
   { re: /ANVISA|Portaria\s*344|SNGPC/i, por: 'controle regulatório não implementado' },
-  { re: /acur[aá]cia|precis[aã]o|taxa de acerto|acerta\s+\d|\d+\s*% de acerto/i, por: 'não há conjunto de avaliação que sustente acurácia' },
-  { re: /(cl[ií]nicas|tutores|usu[aá]rios|veterin[aá]rios)[^.<?]{0,30}\b(usam|usando|atendid|cadastrad|ativos|no brasil|parceir|confiam)|usad[oa] por (cl[ií]nicas|veterin)|em \d+ estados|j[aá] usam o kura|confiam no kura|clientes satisfeitos/i, por: 'tração/número de cliente: o KURA tem 0 clientes pagantes' },
-  { re: /receita recorrente|\bMRR\b|\bARR\b|faturamento de R\$/i, por: 'receita inexistente' },
-  { re: /★|\d[,.]\d\s*(\/\s*5|estrelas|na (app|play))|\bNPS\b|\d+\s*% de satisfa|Play Store/i, por: 'avaliação de loja inexistente' },
-  { re: /\b(iPhone|iOS|iPad)\b(?![^<]{0,80}(n[aã]o testamos|n[aã]o prometemos))|App Store/, por: 'iOS nunca foi verificado' },
-  { re: /isolad[oa]s?\b|isolamento (total|completo)|s[óo] v[eê] (os )?(pr[óo]prios|seus) dados|nenhuma cl[ií]nica (v[eê]|enxerga|acessa)/i, por: 'vazamento cross-tenant A6 ainda aberto' },
-  { re: /LGPD compliant|certificad[oa] (pela|na) LGPD|100% LGPD|conformidade com a LGPD|adequad[oa] [àa] LGPD/i, por: 'LGPD não certifica; adequação não foi auditada' },
-  { re: /aprovad[oa] pel[oa] (FIAP|NEXT)|selecionad[oa] (pel[oa]|para o|no) (FIAP|NEXT)|parceir[oa] oficial|Clyvo/i, por: 'selo, aprovação ou parceria sem documento' },
-  { re: /\b(Luna|a IA|o KURA)\s+diagnostica|diagn[óo]stico (por|com|feito pela|autom[aá]tico)/i, por: 'a Luna não diagnostica' },
-  { re: /\bgr[aá]tis\b|sem fidelidade|teste de \d+ dias/i, por: 'oferta que o contrato não prevê' },
-  { re: /nota fiscal (inclu[ií]da|integrada)|(?<!n[aã]o )emite nota/i, por: 'não há módulo fiscal' },
-  { re: /\bAWS\b|Amazon/i, por: 'a infraestrutura não é AWS' },
-  { re: /migra[cç][aã]o|importamos (os )?(seus )?dados|importa[cç][aã]o (completa|de dados)/i, por: 'não existe importador de dados' },
-  { re: /lembrete (de|para) vacina|lembrete autom[aá]tico/i, por: 'lembrete de vacina não funciona sem SQL manual (G2 achado 1)' },
+  { re: /(aprovad|homologad|certificad|recomendad|selecionad)[oa]s?\s+(pel[oa]|no|na)\s+(CFMV|CRMV|FIAP|NEXT)/i, por: 'aprovação de terceiro sem documento' },
+  { re: /clyvo/i, por: 'marca de terceiro sem acordo escrito' },
+  { re: /\bAWS\b|Amazon Web Services|Google Cloud|\bAzure\b/i, por: 'infraestrutura não se anuncia sem medição' },
+  { re: /\bNPS\b|★|\bMRR\b|\bARR\b/i, por: 'métrica de tração/avaliação inexistente' },
+  { re: /\d+([.,]\d+)?\s*%/, por: 'percentual sem fonte (a página não tem nenhum medido)' },
+  { re: /\b\d[\d.]*\s*\+?\s*(mil\s+)?(cl[ií]nicas|tutores|pets|usu[aá]rios)\b(?!\s+piloto)/i, por: 'contagem de clínicas/tutores: o KURA tem 0 clientes' },
+  { re: /\b(iPhone|iPad|iOS)\b|App Store|Play Store/, por: 'loja/iOS não publicado nem testado' },
+  { re: /\bPix\b|gr[aá]tis|sem custo|sem fidelidade|sem multa/i, por: 'oferta ou pagamento que o produto/contrato não prevê' },
+  { re: /lembrete|vacina vencer/i, por: 'lembrete de vacina não funciona sem SQL manual (E31/E38)' },
 ];
 
+const NEGACAO = /\b(n[aã]o|nunca|nenhum|nenhuma|ainda n[aã]o)\b/i;
+
 export function varrer(texto) {
-  const plano = texto.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<[^>]+>/g, ' ');
-  return PROIBIDOS.filter((p) => p.re.test(plano) || p.re.test(texto)).map((p) => ({ padrao: String(p.re), por: p.por, trecho: (plano.match(p.re) || texto.match(p.re) || [''])[0] }));
+  // Só o texto que o visitante lê (fora <script>/<style>), mais o conteúdo das
+  // <meta> (description/og), que também é afirmação pública.
+  const metas = [...texto.matchAll(/<meta[^>]+content="([^"]*)"/gi)].map((m) => m[1]).join('\n');
+  const plano = texto.replace(/<(script|style)[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, '\n') + '\n' + metas;
+  const frases = plano.split(/(?<=[.!?])\s+|\n+/).map((f) => f.trim()).filter(Boolean);
+  const achados = [];
+  for (const f of frases) {
+    if (NEGACAO.test(f)) continue;
+    for (const p of PROIBIDOS) {
+      const m = f.match(p.re);
+      if (m) achados.push({ padrao: String(p.re), por: p.por, trecho: f.slice(0, 120) });
+    }
+  }
+  return achados;
 }
 
 function arquivos(dir) {
   return readdirSync(dir).flatMap((n) => {
     const p = join(dir, n);
-    return statSync(p).isDirectory() ? arquivos(p) : /\.(html|js|json|txt|xml)$/.test(n) ? [p] : [];
+    return statSync(p).isDirectory() ? arquivos(p) : /\.html$/.test(n) ? [p] : [];
   });
 }
 
 if (process.argv.includes('--selftest')) {
   // Controle positivo: cada um destes TEM que ser pego, senão um "0 achados"
   // no build não prova nada (regra de ouro do projeto).
+  // Iscas: só termo-âncora. Paráfrase ("A Luna identifica emergências com
+  // segurança") NÃO é pega, de propósito: isso é trabalho da matriz §0.3.
   const iscas = [
-    // protótipo antigo
-    'Mais de 120 clínicas veterinárias já usam Kura', 'Luna com 94% acurácia', 'Receita com assinatura ICP-Brasil',
-    'ISO 27001', 'backup em três regiões AWS', 'migração em 48h', 'app nativo para iPad/iPhone', '4,8 ★',
-    'isolamento total entre clínicas', 'invest@clyvovet.com.br',
-    // as 38 variantes da G2 (g2-landing.md, M9)
-    'Mais de cem clínicas usam o KURA', '120+ clínicas no Brasil', '15.000 tutores cadastrados',
-    '15 mil tutores atendidos pela Luna', 'Usado por clínicas em 12 estados', 'R$ 450 mil de receita recorrente',
-    'Nota 4.8 na App Store', 'Avaliação 4,8/5 na Play Store', '98% de satisfação',
-    'Luna acerta 94% das triagens', '94% de precisão na triagem', 'Taxa de acerto de 94%', 'Detecta urgências com precisão',
-    'Certificado ISO/IEC 27001', 'Certificação ISO 27.001', 'Em conformidade com a LGPD', 'Totalmente adequado à LGPD',
-    'Assinatura digital com certificado A1 e A3', 'Receita com assinatura digital válida juridicamente',
-    'Disponível na App Store', 'App para iOS e Android',
-    'Dados 100% isolados entre clínicas', 'Cada clínica só vê os próprios dados',
-    'Aprovado pela FIAP', 'Selecionado pelo NEXT FIAP 2026', 'Parceiro oficial Clyvo Vet',
-    'Diagnóstico por IA', 'A Luna diagnostica o seu pet',
-    'Teste grátis por 14 dias', 'Sem fidelidade', 'Emissão de nota fiscal incluída',
-    'Infra em nuvem da Amazon', 'Migração dos seus dados em 2 dias', 'Importamos os dados do SimplesVet',
-    'Clientes satisfeitos', 'ANVISA', 'Hospedado na AWS', 'Lembrete de vacina automático para o tutor',
+    'ISO 27001', 'Certificado ISO/IEC 27001', 'Selo de segurança SOC 2', 'Receita com assinatura ICP-Brasil',
+    'Controle ANVISA incluído', 'Aprovado pelo CFMV', 'Homologado pelo CRMV-SP', 'Aprovado pela FIAP',
+    'Selecionado pelo NEXT FIAP 2026', 'Parceiro oficial Clyvo Vet', 'invest@clyvovet.com.br',
+    'Hospedado na AWS', 'Servidores no Google Cloud', '98% NPS', 'Nota 4,8 ★', 'R$ 450K MRR',
+    'Luna com 94% acurácia', 'A Luna reconhece 99% das emergências', 'Dados 100% protegidos pela LGPD',
+    'Disponibilidade de 99,9%', 'Mais de 120 clínicas veterinárias já usam Kura', 'Mais de 300 pets triados por mês',
+    'Já são 40 clínicas na lista de espera', '15.000 tutores cadastrados', 'Disponível na App Store',
+    'App para iOS e Android', 'Pagamento por Pix integrado', 'Teste grátis por 14 dias', 'Primeiro mês sem custo',
+    'Cancele quando quiser, sem multa', 'Lembrete de vacina automático',
   ];
-  // Controle negativo: frases honestas que a página usa e que NÃO podem disparar.
+  // Controle negativo: as 16 frases honestas da re-G2 (que a 2ª versão punia) + frases da página.
   const honestas = [
-    'No iPhone ainda não testamos, então não prometemos.', 'Ela não diagnostica.',
-    'Quem diagnostica é o veterinário.', 'O KURA não emite nota.', 'O KURA já tem clientes?',
-    'Nenhuma pagante ainda.', 'Para clínicas de 1 a 2 veterinários', 'Quer ser uma das 5 clínicas piloto?',
-    'o KURA vai estar como expositor.', 'Não incluso em nenhum plano: emissão de nota fiscal e pagamentos.',
+    'A precisão do horário depende do cadastro da clínica.', 'Sem migração: o KURA roda ao lado do seu sistema.',
+    'Não fazemos migração de dados.', 'Você não precisa baixar nada na App Store.', 'O KURA ainda não tem MRR.',
+    'Veterinários usam o prontuário por voz durante a consulta.', 'Clínicas usando o piloto falam direto com o time.',
+    'Tutores cadastrados na clínica recebem resposta com o nome do pet.',
+    'Clínicas no Brasil que atendem até tarde recebem mensagens de madrugada.',
+    'O piloto não é grátis: custa R$ 149 por mês.', 'Não existe teste de 30 dias.',
+    'Clínicas de Manaus, Amazonas, também podem participar.', 'iOS ainda não testado.',
+    'A Luna não faz diagnóstico por imagem.', 'Sua clínica emite nota no sistema que já usa.',
+    'Cada prontuário fica isolado por paciente.',
+    'No iPhone ainda não testamos, então não prometemos.', 'Quantas clínicas usam o KURA hoje?',
+    'Nenhuma pagante ainda.', 'Quer ser uma das 5 clínicas piloto?', 'Para clínicas de 1 a 2 veterinários',
+    'Nos casos que a Resolução CFMV 1.465/2022 permite.', 'o KURA vai estar como expositor.',
   ];
   const falhas = iscas.filter((i) => varrer(i).length === 0);
   for (const h of honestas) if (varrer(h).length) falhas.push(`falso positivo: "${h}"`);

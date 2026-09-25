@@ -69,7 +69,7 @@ export default function LunaSimulator({ cenarios, regrasVersao, commit }: Props)
       <div class="phone" aria-live={interagiu ? 'polite' : 'off'}>
         <div class="phone-top">
           <span class="dot" aria-hidden="true" />
-          <span>WhatsApp da clínica</span>
+          <span>WhatsApp do KURA</span>
           <span class="mute-sm">atendido pela Luna</span>
         </div>
         <div class="thread">
@@ -95,7 +95,6 @@ export default function LunaSimulator({ cenarios, regrasVersao, commit }: Props)
         <div class="fila-row">
           <span class={`nivel n-${c.urgencia.toLowerCase()}`}>{NIVEL[c.urgencia]}</span>
           <strong>{c.pet}</strong>
-          <span class="status">Aguardando veterinário</span>
         </div>
         <p class="motivo">
           {c.sintomas.length ? (
@@ -114,7 +113,7 @@ export default function LunaSimulator({ cenarios, regrasVersao, commit }: Props)
       </div>
 
       <p class="sim-note">
-        Conversa encenada, com tutor cadastrado na clínica. A classificação, o
+        Conversa encenada, com tutor cadastrado na clínica e um pet. A classificação, o
         registro e a resposta saem do código real da Luna (regras v{regrasVersao},
         versão {commit}).
       </p>
