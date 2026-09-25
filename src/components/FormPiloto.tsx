@@ -16,7 +16,7 @@ const ROTULO: Record<Campo, string> = {
 
 export function montarMensagem(d: Record<string, string>): string {
   const linhas = [
-    'Olá! Quero saber do piloto do KURA para a minha clínica.',
+    'Olá! Quero entrar na lista do piloto do KURA para a minha clínica.',
     `Nome: ${d.nome}`,
     `Clínica: ${d.clinica}`,
     `Cidade: ${d.cidade}`,

@@ -2,15 +2,16 @@
 import FormPiloto from './FormPiloto.tsx';
 import { WHATSAPP_PILOTO, RESPONSAVEL, PRECOS, linkWhatsApp } from '../config';
 import '../styles/form.css';
-const direto = linkWhatsApp('Olá! Quero saber do piloto do KURA para a minha clínica.');
+const direto = linkWhatsApp('Olá! Quero entrar na lista do piloto do KURA para a minha clínica.');
 ---
 <section class="section piloto" id="piloto" aria-labelledby="piloto-titulo">
   <div class="wrap grid">
     <div>
-      <h2 id="piloto-titulo">Quer ser uma das {PRECOS.vagasPiloto} clínicas piloto?</h2>
+      <h2 id="piloto-titulo">Entre na lista do piloto.</h2>
       <p class="lede">
-        Conte um pouco da sua clínica. A conversa continua no WhatsApp, direto
-        com quem constrói o KURA.
+        São {PRECOS.vagasPiloto} vagas. O piloto abre quando o cadastro pela recepção
+        estiver pronto, e a gente avisa você antes. A conversa continua no WhatsApp,
+        direto com quem constrói o KURA.
       </p>
       <p class="alt">
         Prefere escrever do seu jeito? <a href={direto} target="_blank" rel="noopener">Abrir o WhatsApp sem formulário</a>.
