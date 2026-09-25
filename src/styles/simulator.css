@@ -50,7 +50,6 @@
 .bubble time { position: absolute; right: 12px; bottom: 5px; font-size: 0.7rem; color: var(--lp-mute); }
 .tutor { justify-self: end; background: #D5E8CF; border-bottom-right-radius: 4px; }
 .luna { justify-self: start; background: var(--surface); border-bottom-left-radius: 4px; }
-.bubble mark { background: var(--amber-pale); color: var(--text); padding: 0 2px; border-radius: 3px; box-shadow: inset 0 -2px 0 var(--amber); }
 
 .typing { display: none; gap: 4px; padding: 12px 14px; background: var(--surface); border-radius: 14px; justify-self: start; margin: 0; }
 .typing.on { display: inline-flex; }
@@ -79,3 +78,4 @@
 .motivo { margin-top: 10px; font-size: 0.9rem; color: var(--text-soft); }
 
 .sim-note { font-size: 0.8rem; color: var(--lp-mute); }
+.motivo code { font-family: var(--font-mono); font-size: 0.82rem; background: var(--surface-2); padding: 1px 6px; border-radius: 4px; margin-right: 6px; }

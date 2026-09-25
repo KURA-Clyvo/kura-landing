@@ -3,7 +3,7 @@
     "repo": "kura-luna-ai",
     "commit": "0259178",
     "motor": "luna/src/ai/triage_engine.py::TriageEngine.classificar",
-    "respostas": "luna/src/services/inbound_message_service.py::_RESPOSTAS",
+    "respostas": "luna/src/services/inbound_message_service.py::InboundMessageService._compor_resposta (tutor cadastrado, 1 pet)",
     "regras_versao": "1.4",
     "reproduzir": "PYTHONPATH=. python ../../kura-landing/scripts/gerar-cenarios-luna.py"
   },
@@ -18,16 +18,12 @@
       "sintomas": [
         "combinacao:ingestao_toxica"
       ],
-      "destaques": [
-        "comeu",
-        "chocolate"
-      ],
-      "resposta": "Identificamos sintomas que requerem atenção urgente. Estamos notificando seu veterinário. Para emergências imediatas, ligue para a clínica."
+      "resposta": "Recebemos a mensagem sobre o Thor. Identificamos sintomas que requerem atenção urgente. Estamos notificando seu veterinário. Para emergências imediatas, ligue para a clínica."
     },
     {
       "id": "vomito",
       "rotulo": "Vomitou e não come",
-      "pet": "Mel",
+      "pet": "Max",
       "mensagem": "Ele vomitou duas vezes hoje e não quer comer",
       "urgencia": "MEDIA",
       "score": 6,
@@ -35,11 +31,7 @@
         "vomitou",
         "não quer comer"
       ],
-      "destaques": [
-        "vomitou",
-        "não quer comer"
-      ],
-      "resposta": "Mensagem recebida. Nossa equipe retorna em até 2 horas. Se o animal apresentar dificuldade para respirar, sangramento que não para, desmaio ou não responder, convulsão, tiver ingerido algo tóxico ou remédio humano, sofrido queda ou atropelamento, ou não conseguir urinar, procure atendimento veterinário imediato."
+      "resposta": "Recebemos a mensagem sobre o Max. Mensagem recebida. Nossa equipe retorna em até 2 horas. Se o animal apresentar dificuldade para respirar, sangramento que não para, desmaio ou não responder, convulsão, tiver ingerido algo tóxico ou remédio humano, sofrido queda ou atropelamento, ou não conseguir urinar, procure atendimento veterinário imediato."
     },
     {
       "id": "estranho",
@@ -49,8 +41,7 @@
       "urgencia": "BAIXA",
       "score": 0,
       "sintomas": [],
-      "destaques": [],
-      "resposta": "Mensagem registrada. Respondemos em horário comercial. Se o animal apresentar dificuldade para respirar, sangramento que não para, desmaio ou não responder, convulsão, tiver ingerido algo tóxico ou remédio humano, sofrido queda ou atropelamento, ou não conseguir urinar, procure atendimento veterinário imediato."
+      "resposta": "Recebemos a mensagem sobre o Bidu. Mensagem registrada. Respondemos em horário comercial. Se o animal apresentar dificuldade para respirar, sangramento que não para, desmaio ou não responder, convulsão, tiver ingerido algo tóxico ou remédio humano, sofrido queda ou atropelamento, ou não conseguir urinar, procure atendimento veterinário imediato."
     }
   ]
 }

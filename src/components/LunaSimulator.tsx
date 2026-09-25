@@ -10,7 +10,6 @@ export interface Cenario {
   mensagem: string;
   urgencia: 'ALTA' | 'MEDIA' | 'BAIXA';
   sintomas: string[];
-  destaques: string[];
   resposta: string;
 }
 
@@ -24,27 +23,13 @@ const NIVEL: Record<Cenario['urgencia'], string> = {
   BAIXA: 'Baixa urgência',
 };
 
-function escapeRe(s: string) {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-function Destacado({ texto, termos }: { texto: string; termos: string[] }) {
-  if (!termos.length) return <>{texto}</>;
-  const re = new RegExp(`(${termos.map(escapeRe).join('|')})`, 'gi');
-  const partes = texto.split(re);
-  return (
-    <>
-      {partes.map((p, i) =>
-        i % 2 === 1 ? <mark key={i}>{p}</mark> : <span key={i}>{p}</span>,
-      )}
-    </>
-  );
-}
-
 export default function LunaSimulator({ cenarios, regrasVersao, commit }: Props) {
   const [ativo, setAtivo] = useState(cenarios[0].id);
   const [fase, setFase] = useState<Fase>(3); // SSR e sem JS: conversa completa
   const timers = useRef<number[]>([]);
+  // Sem anúncio automático ao carregar: o leitor de tela só acompanha a
+  // conversa depois que a pessoa escolhe uma mensagem (G2 da landing, achado 12).
+  const [interagiu, setInteragiu] = useState(false);
   const c = cenarios.find((x) => x.id === ativo) ?? cenarios[0];
 
   function tocar(id: string) {
@@ -64,7 +49,6 @@ export default function LunaSimulator({ cenarios, regrasVersao, commit }: Props)
     return () => timers.current.forEach(clearTimeout);
   }, []);
 
-  const motivo = c.destaques.length ? c.destaques.join(' + ') : null;
 
   return (
     <div class="sim">
@@ -75,14 +59,14 @@ export default function LunaSimulator({ cenarios, regrasVersao, commit }: Props)
             type="button"
             class="chip"
             aria-pressed={x.id === ativo}
-            onClick={() => tocar(x.id)}
+            onClick={() => { setInteragiu(true); tocar(x.id); }}
           >
             {x.rotulo}
           </button>
         ))}
       </div>
 
-      <div class="phone" aria-live="polite">
+      <div class="phone" aria-live={interagiu ? 'polite' : 'off'}>
         <div class="phone-top">
           <span class="dot" aria-hidden="true" />
           <span>WhatsApp da clínica</span>
@@ -90,7 +74,7 @@ export default function LunaSimulator({ cenarios, regrasVersao, commit }: Props)
         </div>
         <div class="thread">
           <p class={`bubble tutor ${fase >= 1 ? 'on' : ''}`}>
-            <Destacado texto={c.mensagem} termos={fase >= 3 ? c.destaques : []} />
+            {c.mensagem}
             <time>23:14</time>
           </p>
           <p class={`typing ${fase === 1 ? 'on' : ''}`} aria-hidden="true">
@@ -114,8 +98,11 @@ export default function LunaSimulator({ cenarios, regrasVersao, commit }: Props)
           <span class="status">Aguardando veterinário</span>
         </div>
         <p class="motivo">
-          {motivo ? (
-            <>Motivo da classificação: <b>{motivo}</b></>
+          {c.sintomas.length ? (
+            <>
+              Registrado com a classificação:{' '}
+              {c.sintomas.map((x) => <code>{x}</code>)}
+            </>
           ) : (
             <>
               A Luna não reconheceu nenhum termo de urgência nesta mensagem.
@@ -127,8 +114,9 @@ export default function LunaSimulator({ cenarios, regrasVersao, commit }: Props)
       </div>
 
       <p class="sim-note">
-        Conversa encenada. A classificação e a resposta foram geradas pelo motor
-        real da Luna (regras v{regrasVersao}, versão {commit}).
+        Conversa encenada, com tutor cadastrado na clínica. A classificação, o
+        registro e a resposta saem do código real da Luna (regras v{regrasVersao},
+        versão {commit}).
       </p>
     </div>
   );
