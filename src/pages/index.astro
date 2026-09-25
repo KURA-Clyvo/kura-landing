@@ -2,10 +2,60 @@
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
+import Fatos from '../components/Fatos.astro';
+import Dia from '../components/Dia.astro';
+import Coexistir from '../components/Coexistir.astro';
+import Plataforma from '../components/Plataforma.astro';
+import Decisao from '../components/Decisao.astro';
+import Engenharia from '../components/Engenharia.astro';
+import Preco from '../components/Preco.astro';
+import Manifesto from '../components/Manifesto.astro';
+import Perguntas from '../components/Perguntas.astro';
+import { perguntas } from '../data/perguntas';
+import Piloto from '../components/Piloto.astro';
+import Rodape from '../components/Rodape.astro';
+import { PRECOS } from '../config';
+
+// JSON-LD sem aggregateRating: não existe avaliação, então não se declara.
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'KURA',
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web, Android',
+    description: 'Sistema para clínicas veterinárias com triagem por IA no WhatsApp do tutor.',
+    offers: { '@type': 'Offer', price: String(PRECOS.essencial), priceCurrency: 'BRL' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: perguntas.map((p) => ({
+      '@type': 'Question',
+      name: p.q,
+      acceptedAnswer: { '@type': 'Answer', text: p.a },
+    })),
+  },
+];
 ---
-<Base title="KURA — triagem no WhatsApp do tutor para clínicas veterinárias" description="A Luna responde o tutor no WhatsApp, classifica a urgência e deixa a conversa pronta na fila da clínica. O veterinário decide.">
+<Base
+  title="KURA: triagem no WhatsApp do tutor para clínicas veterinárias"
+  description="A Luna responde o tutor no WhatsApp, classifica a urgência e deixa a conversa pronta na fila da clínica. O veterinário decide. Piloto de 90 dias para 5 clínicas."
+  jsonLd={jsonLd}
+>
   <Header />
   <main id="conteudo">
     <Hero />
+    <Fatos />
+    <Dia />
+    <Coexistir />
+    <Plataforma />
+    <Decisao />
+    <Engenharia />
+    <Preco />
+    <Manifesto />
+    <Perguntas />
+    <Piloto />
   </main>
+  <Rodape />
 </Base>

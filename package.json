@@ -10,7 +10,7 @@
     "check": "astro check",
     "check:claims": "node scripts/check-claims.mjs dist",
     "check:claims:selftest": "node scripts/check-claims.mjs --selftest",
-    "test": "node --test tests/"
+    "test": "node --test \"tests/**/*.test.ts\""
   },
   "engines": {
     "node": ">=22.12.0"

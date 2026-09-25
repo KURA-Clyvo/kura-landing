@@ -1,0 +1,33 @@
+---
+// Sequência real do fluxo de aprovação — por isso numerada.
+const passos = [
+  { t: 'A Luna sugere', d: 'Classifica a urgência da mensagem ou monta o rascunho do prontuário a partir da sua voz.' },
+  { t: 'Você confere', d: 'Vê o que ela sugeriu e por quê. Corrige o que precisar.' },
+  { t: 'Só então fica salvo', d: 'Nada vai para o prontuário sem a confirmação de um veterinário.' },
+];
+---
+<section class="section" aria-labelledby="dec-titulo">
+  <div class="wrap grid">
+    <div>
+      <h2 id="dec-titulo">A IA sugere. O veterinário decide.</h2>
+      <p class="lede">
+        A Luna não diagnostica. Ela organiza e prioriza para você chegar mais
+        rápido ao caso que precisa de você.
+      </p>
+    </div>
+    <ol class="passos">
+      {passos.map((p) => <li><h3>{p.t}</h3><p>{p.d}</p></li>)}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 88px); align-items: start; }
+  .lede { margin-top: 20px; }
+  .passos { list-style: none; margin: 0; padding: 0; counter-reset: passo; display: grid; gap: 0; }
+  li { counter-increment: passo; position: relative; padding: 22px 0 22px 64px; border-top: 1px solid var(--border-strong); }
+  li:last-child { border-bottom: 1px solid var(--border-strong); }
+  li::before { content: counter(passo); position: absolute; left: 0; top: 16px; font-family: var(--font-display); font-size: 2.4rem; line-height: 1; color: var(--sage); }
+  li p { color: var(--text-soft); margin-top: 4px; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+</style>

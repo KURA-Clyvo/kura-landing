@@ -1,0 +1,53 @@
+---
+---
+<section class="section coex" aria-labelledby="coex-titulo">
+  <div class="wrap grid">
+    <div>
+      <h2 id="coex-titulo">Não precisa trocar de sistema.</h2>
+      <p class="lede">
+        O KURA roda ao lado do sistema que você já usa. Ele liga a parte que
+        falta: a conversa com o tutor no WhatsApp, com triagem, chegando pronta
+        para a equipe.
+      </p>
+      <p class="nota">
+        Nota fiscal continua no seu sistema atual. O KURA não emite nota.
+      </p>
+    </div>
+    <figure class="mapa" aria-labelledby="mapa-legenda">
+      <div class="no externo">
+        <span class="quem">Tutor</span>
+        <span class="o-que">WhatsApp de sempre, sem app e sem cadastro</span>
+      </div>
+      <div class="liga" aria-hidden="true"></div>
+      <div class="no kura">
+        <span class="quem">KURA</span>
+        <span class="o-que">Luna, triagem, fila por urgência, prontuário por voz</span>
+      </div>
+      <div class="liga" aria-hidden="true"></div>
+      <div class="no externo">
+        <span class="quem">Seu sistema atual</span>
+        <span class="o-que">Continua com nota fiscal, estoque e o que já funciona</span>
+      </div>
+      <figcaption id="mapa-legenda" class="visually-hidden">
+        O tutor fala pelo WhatsApp com o KURA, que organiza a conversa para a
+        clínica. O sistema atual da clínica continua funcionando ao lado.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .coex { background: var(--surface); border-block: 1px solid var(--border); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 88px); align-items: center; }
+  .lede { margin-top: 20px; }
+  .nota { margin-top: 20px; font-size: 0.95rem; color: var(--lp-mute); }
+  .mapa { margin: 0; display: grid; justify-items: stretch; }
+  .no { display: grid; gap: 4px; padding: 18px 22px; border-radius: var(--r-lg); }
+  .externo { border: 1.5px dashed var(--border-strong); background: var(--bg); }
+  .kura { background: var(--ocean); color: var(--text-on-ocean); }
+  .quem { font-weight: 600; }
+  .o-que { font-size: 0.92rem; opacity: 0.92; }
+  .externo .o-que { color: var(--text-soft); opacity: 1; }
+  .liga { width: 2px; height: 28px; margin-inline: auto; background: var(--ocean); }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+</style>

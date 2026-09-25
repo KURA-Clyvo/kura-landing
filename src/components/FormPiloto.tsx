@@ -1,0 +1,107 @@
+import { useRef, useState } from 'preact/hooks';
+
+// Ruling L-6 (2026-09-24): o pedido de piloto vai para o WhatsApp do Felipe.
+// Este formulário NÃO envia nada a servidor nenhum — ele só monta a mensagem e
+// abre o WhatsApp do próprio visitante, que decide se envia.
+interface Props { numero: string; responsavel: string }
+
+type Campo = 'nome' | 'clinica' | 'cidade' | 'vets';
+const OPCOES_VETS = ['1', '2 a 3', '4 a 5', '6 ou mais'];
+const ROTULO: Record<Campo, string> = {
+  nome: 'Seu nome',
+  clinica: 'Nome da clínica',
+  cidade: 'Cidade',
+  vets: 'Quantos veterinários atendem na clínica',
+};
+
+export function montarMensagem(d: Record<string, string>): string {
+  const linhas = [
+    'Olá! Quero saber do piloto do KURA para a minha clínica.',
+    `Nome: ${d.nome}`,
+    `Clínica: ${d.clinica}`,
+    `Cidade: ${d.cidade}`,
+    `Veterinários: ${d.vets}`,
+  ];
+  if (d.sistema) linhas.push(`Sistema que usa hoje: ${d.sistema}`);
+  return linhas.join('\n');
+}
+
+export default function FormPiloto({ numero, responsavel }: Props) {
+  const [erros, setErros] = useState<Partial<Record<Campo, string>>>({});
+  const [link, setLink] = useState<string | null>(null);
+  const form = useRef<HTMLFormElement>(null);
+
+  function enviar(e: Event) {
+    e.preventDefault();
+    const fd = new FormData(form.current!);
+    const d = Object.fromEntries(
+      ['nome', 'clinica', 'cidade', 'vets', 'sistema'].map((k) => [k, String(fd.get(k) ?? '').trim()]),
+    );
+    const novos: Partial<Record<Campo, string>> = {};
+    (['nome', 'clinica', 'cidade'] as Campo[]).forEach((k) => {
+      if (!d[k]) novos[k] = `Preencha ${ROTULO[k].toLowerCase()}.`;
+    });
+    if (!d.vets) novos.vets = 'Escolha quantos veterinários atendem na clínica.';
+    setErros(novos);
+    const primeiro = Object.keys(novos)[0];
+    if (primeiro) {
+      form.current!.querySelector<HTMLElement>(`[name="${primeiro}"]`)?.focus();
+      return;
+    }
+    const url = `https://wa.me/${numero}?text=${encodeURIComponent(montarMensagem(d))}`;
+    setLink(url);
+    window.open(url, '_blank', 'noopener');
+  }
+
+  const campo = (k: Campo, auto: string) => (
+    <div class="f-campo">
+      <label for={`f-${k}`}>{ROTULO[k]}</label>
+      <input
+        id={`f-${k}`}
+        name={k}
+        type="text"
+        autocomplete={auto}
+        aria-invalid={erros[k] ? 'true' : undefined}
+        aria-describedby={erros[k] ? `f-${k}-erro` : undefined}
+      />
+      {erros[k] && <p id={`f-${k}-erro`} class="f-erro">{erros[k]}</p>}
+    </div>
+  );
+
+  return (
+    <form ref={form} class="f" onSubmit={enviar} noValidate>
+      {campo('nome', 'name')}
+      {campo('clinica', 'organization')}
+      {campo('cidade', 'address-level2')}
+      <fieldset class="f-campo" aria-describedby={erros.vets ? 'f-vets-erro' : undefined}>
+        <legend>{ROTULO.vets}</legend>
+        <div class="f-opcoes">
+          {OPCOES_VETS.map((o, i) => (
+            <label class="f-opcao">
+              <input type="radio" name="vets" value={o} aria-invalid={erros.vets && i === 0 ? 'true' : undefined} />
+              <span>{o}</span>
+            </label>
+          ))}
+        </div>
+        {erros.vets && <p id="f-vets-erro" class="f-erro">{erros.vets}</p>}
+      </fieldset>
+      <div class="f-campo">
+        <label for="f-sistema">Sistema que usa hoje <span class="f-opc">(opcional)</span></label>
+        <input id="f-sistema" name="sistema" type="text" />
+      </div>
+      <button class="btn btn-primary" type="submit">Abrir o WhatsApp com a mensagem pronta</button>
+      <p class="f-aviso">
+        Este site não guarda o que você escreve. O botão abre o seu WhatsApp com a
+        mensagem montada para {responsavel}, e você decide se envia.
+      </p>
+      <div role="status" class="f-status">
+        {link && (
+          <p>
+            Mensagem pronta no WhatsApp. Se ele não abriu,{' '}
+            <a href={link} target="_blank" rel="noopener">toque aqui para abrir</a>.
+          </p>
+        )}
+      </div>
+    </form>
+  );
+}

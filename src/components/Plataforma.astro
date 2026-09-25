@@ -1,0 +1,78 @@
+---
+// Só funcionalidade que existe no código hoje (KURA_LANDING_PAGE_PLANO.md §0.3).
+// Nada de ICP-Brasil, nota fiscal, pagamento, IoT ou app de iPhone.
+---
+<section class="section" id="plataforma" aria-labelledby="plat-titulo">
+  <div class="wrap">
+    <h2 id="plat-titulo">Simples de usar. Completo por baixo.</h2>
+    <p class="lede intro">O que a clínica usa no dia a dia, num lugar só.</p>
+    <div class="bento">
+      <article class="c luna">
+        <h3>Triagem no WhatsApp do tutor</h3>
+        <p>O tutor escreve como sempre escreveu. A Luna classifica em alta, média ou baixa urgência e mostra quais palavras levaram àquela classificação. Você sabe por que ela decidiu.</p>
+        <ul class="niveis" aria-label="Níveis de urgência">
+          <li class="n-alta">Alta</li><li class="n-media">Média</li><li class="n-baixa">Baixa</li>
+        </ul>
+      </article>
+      <article class="c voz">
+        <h3>Prontuário por voz</h3>
+        <p>Você fala durante a consulta e recebe um rascunho no formato SOAP. Revisa, corrige e só então salva.</p>
+      </article>
+      <article class="c">
+        <h3>Agenda e lembrete de vacina</h3>
+        <p>A agenda da clínica e um lembrete para o tutor por vacina, sem repetir.</p>
+      </article>
+      <article class="c">
+        <h3>Teleorientação</h3>
+        <p>Chamada de vídeo com o tutor, nos casos que a Resolução CFMV 1.465/2022 permite.</p>
+      </article>
+      <article class="c">
+        <h3>Receita em PDF</h3>
+        <p>A prescrição sai em PDF, pronta para enviar ao tutor.</p>
+      </article>
+      <article class="c">
+        <h3>Financeiro básico</h3>
+        <p>Tabela de serviços, preços e cobranças da clínica.</p>
+      </article>
+      <article class="c">
+        <h3>Equipe com login próprio</h3>
+        <p>Cada pessoa entra com a sua senha, como gestor ou veterinário.</p>
+      </article>
+      <article class="c tutor">
+        <h3>App do tutor</h3>
+        <p>O tutor acompanha o histórico, as vacinas e os agendamentos do pet.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .intro { margin-top: 16px; }
+  .bento {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: minmax(150px, auto);
+    gap: 14px;
+  }
+  .c { padding: 22px; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
+  .c p { color: var(--text-soft); font-size: 0.95rem; }
+  .luna { grid-column: span 2; grid-row: span 2; background: var(--ocean); border-color: var(--ocean); color: var(--text-on-ocean); padding: 32px; justify-content: space-between; }
+  .luna h3 { font-family: var(--font-display); font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 500; letter-spacing: -0.02em; }
+  .luna p { color: var(--ocean-pale); font-size: 1.05rem; max-width: 40ch; }
+  .voz { grid-column: span 2; background: var(--amber-pale); border-color: #F1DDB5; }
+  .tutor { grid-column: span 2; background: var(--sage-pale); border-color: #CADCC3; }
+  .niveis { display: flex; gap: 8px; list-style: none; margin: 16px 0 0; padding: 0; }
+  .niveis li { padding: 4px 12px; border-radius: var(--r-full); font-size: 0.85rem; font-weight: 600; }
+  .n-alta { background: var(--clay-pale); color: var(--lp-alta-ink); }
+  .n-media { background: var(--amber-pale); color: var(--lp-amber-ink); }
+  .n-baixa { background: var(--ocean-pale); color: var(--ocean); }
+  @media (max-width: 960px) {
+    .bento { grid-template-columns: 1fr 1fr; }
+    .luna { grid-row: auto; }
+  }
+  @media (max-width: 600px) {
+    .bento { grid-template-columns: 1fr; }
+    .luna, .voz, .tutor { grid-column: auto; }
+  }
+</style>

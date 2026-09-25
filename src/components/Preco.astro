@@ -1,0 +1,88 @@
+---
+import CalculadoraWhatsApp from './CalculadoraWhatsApp.tsx';
+import { PRECOS } from '../config';
+// Preços: KURA_PLANO_FINANCEIRO.md §2.3 (versão de 2026-09-10).
+const planos = [
+  { nome: 'Essencial', preco: `R$ ${PRECOS.essencial}`, sufixo: 'por mês', para: 'Para clínicas de 1 a 2 veterinários',
+    itens: ['Prontuário e agenda', 'Financeiro básico', 'App do tutor', 'Até 2 veterinários'] },
+  { nome: 'Clínica', preco: `R$ ${PRECOS.clinica}`, sufixo: 'por mês', para: 'Para clínicas de 3 a 5 veterinários',
+    itens: ['Tudo do Essencial', 'Luna no WhatsApp do tutor', 'Prontuário por voz', 'Teleorientação e receita em PDF', 'Até 5 veterinários'] },
+  { nome: 'Rede', preco: `R$ ${PRECOS.rede}`, sufixo: 'por unidade, por mês', para: 'Para redes e hospitais',
+    itens: ['Tudo do Clínica', 'Várias unidades', 'Conversa sobre o que a sua rede precisa'] },
+];
+---
+<section class="section" id="preco" aria-labelledby="preco-titulo">
+  <div class="wrap">
+    <h2 id="preco-titulo">Preço na mesa, sem letra miúda.</h2>
+
+    <div class="piloto" id="piloto-oferta">
+      <div>
+        <p class="tag">Piloto com {PRECOS.vagasPiloto} vagas</p>
+        <p class="valor">R$ {PRECOS.piloto}<span> por mês, por {PRECOS.pilotoDias} dias</span></p>
+      </div>
+      <ul>
+        <li>Plano Clínica completo, com a Luna</li>
+        <li>Data de fim escrita no contrato. Se não servir, acaba sozinho.</li>
+        <li>Você não precisa largar o seu sistema atual.</li>
+      </ul>
+      <a class="btn btn-primary" href="#piloto">Quero uma vaga no piloto</a>
+    </div>
+
+    <div class="planos">
+      {planos.map((p) => (
+        <article class={`plano ${p.nome === 'Clínica' ? 'destaque' : ''}`}>
+          <h3>{p.nome}</h3>
+          <p class="para">{p.para}</p>
+          <p class="preco">{p.preco} <span>{p.sufixo}</span></p>
+          <ul>{p.itens.map((i) => <li>{i}</li>)}</ul>
+        </article>
+      ))}
+    </div>
+    <p class="fora mute">Não incluso em nenhum plano: emissão de nota fiscal e pagamentos.</p>
+
+    <div class="calc-box">
+      <h3>Quanto custa falar com o tutor no WhatsApp?</h3>
+      <CalculadoraWhatsApp client:visible precoMensagem={PRECOS.custoMensagemReferencia} precoClinica={PRECOS.clinica} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .piloto {
+    margin-top: 40px;
+    display: grid; grid-template-columns: auto 1fr auto; gap: 32px; align-items: center;
+    padding: 28px 32px; border-radius: var(--r-xl);
+    background: var(--amber-pale); border: 1.5px solid var(--amber);
+  }
+  .tag { font-size: 0.9rem; font-weight: 600; color: var(--lp-amber-ink); }
+  .valor { font-family: var(--font-display); font-size: 3rem; line-height: 1; margin-top: 6px; }
+  .valor span { font-family: var(--font-body); font-size: 1rem; color: var(--text-soft); }
+  .piloto ul { margin: 0; padding-left: 18px; color: var(--text-soft); }
+  .planos { margin-top: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .plano { padding: 26px; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--border); }
+  .destaque { border: 2px solid var(--ocean); }
+  .para { color: var(--lp-mute); font-size: 0.92rem; margin-top: 4px; }
+  .preco { font-family: var(--font-display); font-size: 2.3rem; margin-top: 14px; line-height: 1.1; }
+  .preco span { font-family: var(--font-body); font-size: 0.9rem; color: var(--lp-mute); }
+  .plano ul { margin: 16px 0 0; padding-left: 18px; color: var(--text-soft); display: grid; gap: 6px; }
+  .fora { margin-top: 14px; font-size: 0.92rem; }
+  .calc-box { margin-top: 48px; padding: 28px 32px; border-radius: var(--r-xl); background: var(--surface-2); }
+  @media (max-width: 960px) {
+    .piloto { grid-template-columns: 1fr; gap: 18px; }
+    .planos { grid-template-columns: 1fr; }
+  }
+</style>
+
+<style is:global>
+  .calc { margin-top: 16px; display: grid; gap: 16px; }
+  .calc-label { color: var(--text-soft); }
+  .calc-linha { display: flex; align-items: center; gap: 16px; }
+  .calc-linha input { flex: 1; accent-color: var(--ocean); min-height: 32px; }
+  .calc-num { font-family: var(--font-mono); font-size: 1.2rem; min-width: 4ch; text-align: right; }
+  .calc-res { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 0; }
+  .calc-res div { padding: 16px 18px; border-radius: var(--r-md); background: var(--surface); }
+  .calc-res dt { font-size: 0.9rem; color: var(--lp-mute); }
+  .calc-res dd { margin: 6px 0 0; font-family: var(--font-display); font-size: 1.9rem; line-height: 1.1; }
+  .calc-res .kura dd { color: var(--ocean); }
+  @media (max-width: 600px) { .calc-res { grid-template-columns: 1fr; } }
+</style>

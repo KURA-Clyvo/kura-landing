@@ -1,0 +1,30 @@
+---
+import KuraMark from './KuraMark.astro';
+import { RESPONSAVEL } from '../config';
+---
+<footer class="rodape">
+  <div class="wrap grid">
+    <div class="marca">
+      <KuraMark size={30} />
+      <p>
+        KURA é um projeto em fase pré-comercial, criado por estudantes da FIAP.
+        A empresa será constituída na primeira contratação. Responsável: {RESPONSAVEL}.
+      </p>
+    </div>
+    <nav aria-label="Rodapé">
+      <ul>
+        <li><a href="/privacidade">Privacidade</a></li>
+        <li><a href="#piloto">Quero ser piloto</a></li>
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .rodape { border-top: 1px solid var(--border-strong); padding-block: 40px 56px; background: var(--surface-2); }
+  .grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; align-items: flex-start; }
+  .marca { display: flex; gap: 14px; align-items: flex-start; max-width: 60ch; }
+  .marca p { font-size: 0.92rem; color: var(--lp-mute); }
+  ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 24px; }
+  a { font-size: 0.95rem; }
+</style>

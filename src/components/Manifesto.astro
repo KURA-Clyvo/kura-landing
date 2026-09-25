@@ -1,0 +1,21 @@
+---
+import { RESPONSAVEL } from '../config';
+---
+<section class="section manif" aria-labelledby="manif-titulo">
+  <div class="wrap estreito">
+    <h2 id="manif-titulo">Por que a gente mostra a conta.</h2>
+    <div class="texto">
+      <p>O KURA ainda não tem clínica pagante. Você seria uma das cinco primeiras, e é por isso que o piloto custa o que custa.</p>
+      <p>A gente prefere mostrar o que existe e o que falta a prometer o que não entrega. Por isso esta página não tem logo de cliente nem depoimento: ainda não há.</p>
+      <p>O que oferecemos em troca é acesso direto a quem escreve o software. O que você pedir no piloto, a gente escuta de perto.</p>
+    </div>
+    <p class="assina">{RESPONSAVEL} e o time do KURA, São Paulo</p>
+  </div>
+</section>
+
+<style>
+  .manif { background: var(--surface); border-block: 1px solid var(--border); }
+  .estreito { max-width: 780px; }
+  .texto { margin-top: 28px; display: grid; gap: 18px; font-family: var(--font-display); font-size: clamp(1.3rem, 2.2vw, 1.6rem); line-height: 1.45; color: var(--text-soft); }
+  .assina { margin-top: 28px; color: var(--lp-mute); }
+</style>

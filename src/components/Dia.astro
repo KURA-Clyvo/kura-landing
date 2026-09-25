@@ -1,0 +1,38 @@
+---
+// Um dia da clínica: é uma sequência de verdade (hora a hora), por isso a linha do tempo.
+const momentos = [
+  { hora: '23h', titulo: 'O tutor escreve preocupado', texto: 'A clínica está fechada. A mensagem espera até de manhã, e ninguém sabe se era urgente.' },
+  { hora: '8h', titulo: 'A recepção abre o WhatsApp', texto: 'A fila da noite inteira chega de uma vez, sem ordem de prioridade. Alguém lê tudo para achar o caso grave.' },
+  { hora: '19h', titulo: 'O veterinário ainda digita', texto: 'O atendimento acabou, o prontuário não. As anotações do dia viram hora extra.' },
+];
+---
+<section class="section" id="como-funciona" aria-labelledby="dia-titulo">
+  <div class="wrap">
+    <h2 id="dia-titulo">O trabalho que ninguém vê custa caro.</h2>
+    <p class="lede intro">Não é falta de cuidado. É o tempo que o dia não tem.</p>
+    <ol class="linha">
+      {momentos.map((m) => (
+        <li>
+          <span class="hora">{m.hora}</span>
+          <h3>{m.titulo}</h3>
+          <p>{m.texto}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .intro { margin-top: 16px; }
+  .linha { list-style: none; margin: 56px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; border-top: 2px solid var(--ocean); }
+  li { position: relative; padding-top: 28px; }
+  li::before { content: ''; position: absolute; top: -8px; left: 0; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 2px solid var(--ocean); }
+  .hora { display: block; font-family: var(--font-display); font-size: 2.6rem; line-height: 1; color: var(--ocean); margin-bottom: 14px; }
+  h3 { margin-bottom: 8px; }
+  p { color: var(--text-soft); }
+  @media (max-width: 800px) {
+    .linha { grid-template-columns: 1fr; border-top: 0; border-left: 2px solid var(--ocean); gap: 32px; padding-left: 24px; }
+    li { padding-top: 0; }
+    li::before { top: 10px; left: -33px; }
+  }
+</style>

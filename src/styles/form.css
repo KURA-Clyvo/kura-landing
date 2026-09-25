@@ -1,0 +1,27 @@
+/* Formulário do piloto (ilha Preact). */
+.f { display: grid; gap: 18px; }
+.f-campo { display: grid; gap: 6px; border: 0; margin: 0; padding: 0; min-width: 0; }
+.f label, .f legend { font-weight: 500; font-size: 0.95rem; padding: 0; }
+.f input[type='text'] {
+  min-height: 48px; padding: 10px 14px;
+  border: 1.5px solid var(--border-strong); border-radius: var(--r-md);
+  background: var(--bg-elev); color: var(--text);
+  font: 400 1rem var(--font-body);
+}
+.f input[type='text']:focus { outline: none; border-color: var(--ocean); box-shadow: 0 0 0 3px var(--ocean-pale); }
+.f input[aria-invalid='true'] { border-color: var(--lp-alta-ink); }
+.f-opcoes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.f-opcao { position: relative; }
+.f-opcao input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.f-opcao span {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 8px 16px;
+  border: 1.5px solid var(--border-strong); border-radius: var(--r-full);
+  background: var(--bg-elev); font-weight: 400;
+}
+.f-opcao input:checked + span { background: var(--ocean); border-color: var(--ocean); color: var(--text-on-ocean); }
+.f-opcao input:focus-visible + span { box-shadow: var(--lp-focus); }
+.f-opc { font-weight: 400; color: var(--lp-mute); }
+.f-erro { color: var(--lp-alta-ink); font-size: 0.9rem; }
+.f-aviso { font-size: 0.88rem; color: var(--lp-mute); }
+.f-status:empty { display: none; }
+.f-status p { padding: 12px 14px; border-radius: var(--r-md); background: var(--sage-pale); color: var(--text); }

@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Rodape from '../components/Rodape.astro';
+import { RESPONSAVEL, WHATSAPP_PILOTO } from '../config';
+const fone = WHATSAPP_PILOTO.replace(/^55(\d{2})(\d{5})(\d{4})$/, '+55 ($1) $2-$3');
+---
+<Base title="Privacidade | KURA" description="Como o site do KURA trata dados pessoais.">
+  <Header />
+  <main id="conteudo" class="wrap doc">
+    <h1>Privacidade</h1>
+    <p class="mute">Versão de 24 de setembro de 2026.</p>
+
+    <h2>Quem é o responsável</h2>
+    <p>O KURA está em fase pré-comercial e ainda não tem empresa constituída. Até a primeira contratação, o controlador dos dados tratados por este site é <strong>{RESPONSAVEL}</strong>, pessoa física. Contato: WhatsApp {fone}.</p>
+
+    <h2>O que este site coleta</h2>
+    <p>Este site não tem cadastro, não grava o que você digita no formulário e não usa cookies. O formulário do piloto só monta uma mensagem e abre o seu WhatsApp. Você decide se envia.</p>
+    <p>Se você enviar a mensagem, recebemos pelo WhatsApp o que você escreveu (nome, clínica, cidade, número de veterinários e, se quiser, o sistema que usa) e o seu número de telefone.</p>
+
+    <h2>Para que usamos</h2>
+    <p>Só para responder ao seu pedido de informação sobre o piloto e, se você quiser, combinar a participação. A base legal é o procedimento preliminar a um contrato, a seu pedido (LGPD, art. 7º, V). Não usamos para propaganda e não vendemos nem repassamos a ninguém.</p>
+
+    <h2>Quem mais participa</h2>
+    <p>A conversa passa pelo WhatsApp, da Meta, que segue a própria política de privacidade. O site é hospedado pela Cloudflare, que processa dados técnicos de acesso (como o endereço IP) para entregar a página e proteger contra abuso. Se a medição de visitas estiver ativa, ela é agregada e não usa cookies.</p>
+
+    <h2>Por quanto tempo</h2>
+    <p>Se o piloto não acontecer, apagamos a conversa em até 12 meses.</p>
+
+    <h2>Seus direitos</h2>
+    <p>Você pode pedir a qualquer momento para ver, corrigir ou apagar seus dados, ou saber com quem foram compartilhados (LGPD, art. 18). Basta escrever para o WhatsApp acima.</p>
+  </main>
+  <Rodape />
+</Base>
+
+<style>
+  .doc { max-width: 760px; padding-block: 56px 88px; }
+  .doc h1 { font-size: clamp(2.4rem, 5vw, 3.4rem); }
+  .doc h2 { font-size: 1.7rem; margin-top: 40px; }
+  .doc p { margin-top: 12px; color: var(--text-soft); }
+</style>

@@ -1,0 +1,44 @@
+---
+// "Por baixo": só o que está medido. ⚠️ NÃO afirmar isolamento total entre
+// clínicas: o vazamento A6 (alertas de vacina, FIXES_PENDENTES.md) está aberto.
+const servicos = [
+  { nome: 'API da clínica', stack: '.NET 10' },
+  { nome: 'API do tutor', stack: 'Java 21 · Spring Boot' },
+  { nome: 'Luna', stack: 'Python 3.12 · FastAPI' },
+  { nome: 'Banco de dados', stack: 'Oracle' },
+];
+const pontos = [
+  { t: 'Regras que dá para auditar', d: 'A triagem é um motor de regras, não um modelo solto. Cada classificação diz quais termos a dispararam e qual versão das regras decidiu.' },
+  { t: 'Telefone do tutor mascarado', d: 'O número do tutor é mascarado nos registros do sistema. Isso foi medido: antes do ajuste ele aparecia 4 vezes no log, depois 0.' },
+  { t: 'Testado e revisado', d: 'Mais de 2.500 testes automatizados e revisão independente das mudanças, com cada correção provada antes de ser aceita.' },
+];
+---
+<section class="section eng" aria-labelledby="eng-titulo">
+  <div class="wrap">
+    <h2 id="eng-titulo">Por trás da tela simples, um sistema levado a sério.</h2>
+    <ul class="servicos" aria-label="Serviços do KURA">
+      {servicos.map((s) => <li><span class="nome">{s.nome}</span><span class="stack">{s.stack}</span></li>)}
+    </ul>
+    <div class="pontos">
+      {pontos.map((p) => <div><h3>{p.t}</h3><p>{p.d}</p></div>)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .eng { background: var(--ocean); color: var(--text-on-ocean); }
+  h2 { max-width: 20ch; }
+  .servicos { list-style: none; margin: 48px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid #3A6282; border-radius: var(--r-lg); overflow: hidden; }
+  .servicos li { display: grid; gap: 4px; padding: 20px; }
+  .servicos li + li { border-left: 1px solid #3A6282; }
+  .nome { font-weight: 600; }
+  .stack { font-family: var(--font-mono); font-size: 0.85rem; color: var(--ocean-pale); }
+  .pontos { margin-top: 48px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+  .pontos p { margin-top: 8px; color: var(--ocean-pale); }
+  @media (max-width: 900px) {
+    .servicos { grid-template-columns: 1fr 1fr; }
+    .servicos li:nth-child(3) { border-left: 0; }
+    .servicos li:nth-child(n+3) { border-top: 1px solid #3A6282; }
+    .pontos { grid-template-columns: 1fr; gap: 28px; }
+  }
+</style>
