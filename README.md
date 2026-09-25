@@ -51,9 +51,8 @@ npx astro check      # type-check
 ## Publicar (precisa da conta Cloudflare do Felipe)
 
 ```bash
-npx wrangler login     # abre o navegador; conta Cloudflare grátis
-npm run build
-npx wrangler deploy    # publica em kura-landing.<conta>.workers.dev
+npm run cf:login       # wrangler login: abre o navegador; conta Cloudflare grátis
+npm run deploy         # build + detector + wrangler deploy → kura-landing.<conta>.workers.dev
 ```
 
 ## Estado medido (2026-09-25, máquina local)
